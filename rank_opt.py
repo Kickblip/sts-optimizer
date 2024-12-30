@@ -396,43 +396,22 @@ if __name__ == "__main__":
 
     argparser = argparse.ArgumentParser(description="Product Rank Optimization")
     argparser.add_argument("--results_dir", type=str, default="results/test", help="The directory to save the results.")
-    argparser.add_argument("--catalog", type=str, default="coffee_machines", choices=["election_articles","coffee_machines", "books", "cameras"], help="The product catalog to use.")
+    # argparser.add_argument("--catalog", type=str, default="coffee_machines", choices=["election_articles","coffee_machines", "books", "cameras"], help="The product catalog to use.")
+    argparser.add_argument("--catalog", type=str, default="ev_rentals", help="The product catalog to use.")
     argparser.add_argument("--num_iter", type=int, default=500, help="The number of iterations.")
     argparser.add_argument("--test_iter", type=int, default=20, help="The number of test iterations.")
     argparser.add_argument("--random_order", action="store_true", help="Whether to shuffle the product list in each iteration.")
     argparser.add_argument("--target_product_idx", type=int, default=0, help="The index of the target product in the product list.")
     argparser.add_argument("--mode", type=str, default="self", choices=["self", "transfer"], help="Mode of optimization.")
     argparser.add_argument("--user_msg_type", type=str, default="default", choices=["default", "custom"], help="User message type.")
+    argparser.add_argument("--user_msg", type=str, required=True, help="Custom user message for recommendations.")
     argparser.add_argument("--save_state", action="store_true", help="Whether to save the state of the optimization procedure. If interrupted, the experiment can be resumed.")
     args = argparser.parse_args()
 
     results_dir = args.results_dir
     user_msg_type = args.user_msg_type
-    if args.catalog == "coffee_machines":
-        catalog = "data/coffee_machines.jsonl"
-        if user_msg_type == "default":
-            user_msg = "I am looking for a coffee machine. Can I get some recommendations?"
-        elif user_msg_type == "custom":
-            user_msg = "I am looking for an affordable coffee machine. Can I get some recommendations?"
-    elif args.catalog == "books":
-        catalog = "data/books.jsonl"
-        if user_msg_type == "default":
-            user_msg = "I am looking for a book in any genre. Can I get some recommendations?"
-            # user_msg = "I am looking for a book. Can I get some recommendations?"
-        elif user_msg_type == "custom":
-            user_msg = "I am looking for a good adventure novel. Can I get some recommendations?"
-    elif args.catalog == "cameras":
-        catalog = "data/cameras.jsonl"
-        if user_msg_type == "default":
-            user_msg = "I am looking for a camera. Can I get some recommendations?"
-        elif user_msg_type == "custom":
-            user_msg = "I am looking for a high resolution camera. Can I get some recommendations?"
-    elif args.catalog == "election_articles":
-        catalog = "data/election_articles.jsonl"
-        if user_msg_type == "default":
-            user_msg = "I am looking for an article. Can I get some recommendations?"
-    else:
-        raise ValueError("Invalid catalog.")
+    catalog = f"data/{args.catalog}.jsonl"
+    user_msg = args.user_msg
     num_iter = args.num_iter
     test_iter = args.test_iter
     random_order = args.random_order
