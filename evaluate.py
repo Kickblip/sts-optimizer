@@ -121,45 +121,49 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Evaluate the performance of the model")
     parser.add_argument("--model_path", type=str, help="Path to the model", default="meta-llama/Llama-2-7b-chat-hf")
     parser.add_argument("--sts_dir", type=str, help="Director containing product descriptions with STS inserted", default="results")
-    parser.add_argument("--catalog", type=str, default="coffee_machines", choices=["coffee_machines", "books", "cameras","election_articles"], help="The product catalog to use.")
+    # parser.add_argument("--catalog", type=str, default="coffee_machines", choices=["coffee_machines", "books", "cameras","election_articles"], help="The product catalog to use.")
+    parser.add_argument("--catalog", type=str, default="ev_rentals", help="The product catalog to use.")
     parser.add_argument("--prod_idx", type=int, help="Index of the product to rank", default=3)
     parser.add_argument("--num_iter", type=int, help="Number of iterations to run", default=50)
     parser.add_argument("--prod_ord", type=str, choices=["random", "fixed"], help="Order of products during evaluation", default="random")
     parser.add_argument("--user_msg_type", type=str, default="default", choices=["default", "custom"], help="User message type.")
     parser.add_argument("--verbose", action="store_true", help="Print verbose output")
+    parser.add_argument("--user_msg", type=str, required=True, help="Custom user message for recommendations.")
     args = parser.parse_args()
 
     model_path = args.model_path
     sts_dir = args.sts_dir
+    catalog = f"data/{args.catalog}.jsonl"
     prod_idx = args.prod_idx
     num_iter = args.num_iter
     prod_ord = args.prod_ord
     user_msg_type = args.user_msg_type
     verbose = args.verbose
+    user_msg = args.user_msg
 
-    if args.catalog == "coffee_machines":
-        catalog = "data/coffee_machines.jsonl"
-        if user_msg_type == "default":
-            user_msg = "I am looking for a coffee machine. Can I get some recommendations?"
-        elif user_msg_type == "custom":
-            user_msg = "I am looking for an affordable coffee machine. Can I get some recommendations?"
-    elif args.catalog == "books":
-        catalog = "data/books.jsonl"
-        if user_msg_type == "default":
-            user_msg = "I am looking for a book in any genre. Can I get some recommendations?"
-            # user_msg = "I am looking for a book. Can I get some recommendations?"
-        elif user_msg_type == "custom":
-            user_msg = "I am looking for a good adventure novel. Can I get some recommendations?"
-    elif args.catalog == "cameras":
-        catalog = "data/cameras.jsonl"
-        if user_msg_type == "default":
-            user_msg = "I am looking for a camera. Can I get some recommendations?"
-        elif user_msg_type == "custom":
-            user_msg = "I am looking for a high resolution camera. Can I get some recommendations?"
-    elif args.catalog == "election_articles":
-        catalog = "data/election_articles.jsonl"
-        if user_msg_type == "default":
-            user_msg = "I am looking for an article. Can I get some recommendations?"
+    # if args.catalog == "coffee_machines":
+    #     catalog = "data/coffee_machines.jsonl"
+    #     if user_msg_type == "default":
+    #         user_msg = "I am looking for a coffee machine. Can I get some recommendations?"
+    #     elif user_msg_type == "custom":
+    #         user_msg = "I am looking for an affordable coffee machine. Can I get some recommendations?"
+    # elif args.catalog == "books":
+    #     catalog = "data/books.jsonl"
+    #     if user_msg_type == "default":
+    #         user_msg = "I am looking for a book in any genre. Can I get some recommendations?"
+    #         # user_msg = "I am looking for a book. Can I get some recommendations?"
+    #     elif user_msg_type == "custom":
+    #         user_msg = "I am looking for a good adventure novel. Can I get some recommendations?"
+    # elif args.catalog == "cameras":
+    #     catalog = "data/cameras.jsonl"
+    #     if user_msg_type == "default":
+    #         user_msg = "I am looking for a camera. Can I get some recommendations?"
+    #     elif user_msg_type == "custom":
+    #         user_msg = "I am looking for a high resolution camera. Can I get some recommendations?"
+    # elif args.catalog == "election_articles":
+    #     catalog = "data/election_articles.jsonl"
+    #     if user_msg_type == "default":
+    #         user_msg = "I am looking for an article. Can I get some recommendations?"
 
     # if args.catalog == "coffee_machines":
     #     catalog = "data/coffee_machines.jsonl"
